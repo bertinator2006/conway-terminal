@@ -3,7 +3,7 @@
 #define CELLINDEX_Y_INVALID -2
 
 // initialises board with all 0's
-void initialise_board(char *board, int width, int height);
+void clear_board(char *board, int width, int height);
 
 // increments the board state to the next board state
 void increment_boardstate(char *curr_board, char *next_board, int width, int height);
@@ -42,3 +42,6 @@ void increment_neighbour(int index, int neighbour_relative_index, char *board, i
 
 // decrements_neighbour
 void decrement_neighbour(int index, int neighbour_relative_index, char *board, int width, int height)
+
+// reserves space for and creates an empty board
+char *create_empty_board(int width, int height);
