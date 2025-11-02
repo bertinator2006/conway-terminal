@@ -36,3 +36,9 @@ int cell_index(unsigned int x, unsigned int y, unsigned int width, unsigned int 
 
 // replicates the source board into the destination board
 void copy_board(char *src_board, char *dest_board, int width, int height);
+
+// increments a neighbour
+void increment_neighbour(int index, int neighbour_relative_index, char *board, int width, int height);
+
+// decrements_neighbour
+void decrement_neighbour(int index, int neighbour_relative_index, char *board, int width, int height)

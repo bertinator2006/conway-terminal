@@ -1,3 +1,4 @@
+// PLATFORM
 #ifdef _WIN32
 #include <windows.h>
 #define SLEEP_FUNCTION(ms) Sleep(ms)

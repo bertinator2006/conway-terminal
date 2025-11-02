@@ -1,13 +1,14 @@
+#include <stdbool.h>
 #include "conway.h"
 
-// 
+// DONE
 int num_cells_board(int width, int height)
 {
 	return width * height;
 }
 
 
-//
+// DONE
 void initialise_board(char *board, int width, int height)
 {
 	for (int i = 0; i < num_cells_board(width, height); i++)
@@ -16,7 +17,7 @@ void initialise_board(char *board, int width, int height)
 	}
 }
 
-// increments the board state to the next board state
+// DONE
 void increment_boardstate(char *curr_board, char *next_board, int width, int height)
 {
 	for (int i = 0; i < num_cells_board(width, height); i++)
@@ -33,7 +34,7 @@ void increment_boardstate(char *curr_board, char *next_board, int width, int hei
 	}
 }
 
-//
+// DONE
 int cell_is_alive(char *board, int index)
 {
 	if (i < 0)
@@ -45,15 +46,16 @@ int cell_is_alive(char *board, int index)
 
 // does not actually count the number of alive neighbours
 // checks the last 4 bits in given char
+// DONE
 int num_neighbours(char cell)
 {
 	return cell & 0x0f;
 }
 
-//
+// DONE
 void set_cell_alive(int index, char *board, int width, int height)
 {
-	if (index < 0 || index > num_cells_board(width, height))
+	if (index < 0 || index >= num_cells_board(width, height))
 	{
 		return;
 	}
@@ -63,19 +65,36 @@ void set_cell_alive(int index, char *board, int width, int height)
 		return;
 	}
 
-	board[i] = board[i] | CELL_ALIVE;
+	board[index] = board[index] | CELL_ALIVE;
 	int xpos = index % width;
     int ypos = index / width;
 
-	int offset_checkmap[9][2] = {
+	// each pair is a pair for the x and y
+	int offset_checkmap[8][2] = {
 		{-1, -1}, { 0, -1}, { 1, -1},
-		{-1,  0}, { 0,  0}, { 1,  0},
-		{-1, -1}, { 0, -1}, { 1, -1}
-	}
+		{-1,  0}, 			{ 1,  0},
+		{-1,  1}, { 0,  1}, { 1,  1}
+	};
 
+	int offset_x;
+	int offset_y;
+	bool within_bounds_x;
+	bool within_bounds_y;
+
+	for (int i = 0; i < 8; i++)
+	{
+		offset_x = offset_checkmap[i][0];
+		offset_y = offset_checkmap[i][1];
+		within_bounds_x = (offset_x + xpos < width) && (offset_x + xpos >= 0);
+		within_bounds_y = (offset_y + ypos < height) && (offset_y + ypos >= 0);
+		if (within_bounds_x && within_bounds_y)
+		{
+			increment_neighbour(index, i, board, width, height);
+		}
+	}
 }
 
-// 
+// DONE
 int cell_index(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 {
 	if (x >= width)
@@ -89,7 +108,7 @@ int cell_index(unsigned int x, unsigned int y, unsigned int width, unsigned int 
 	return x + y * width;
 }
 
-// 
+// DONE
 void copy_board(char *src_board, char *dest_board, int width, int height)
 {
 	int num_cells = num_cell_board(width, height);
@@ -99,3 +118,44 @@ void copy_board(char *src_board, char *dest_board, int width, int height)
 	}
 }
 
+// DONE
+void increment_neighbour(int index, int neighbour_relative_index, char *board, int width, int height)
+{
+	if (i < 0) return;
+
+	int offset_setmap[8] = {
+		- width - 1,
+		- width, 
+		- width + 1,
+		- 1,
+		1,
+		width - 1,
+		width,
+		width + 1
+	};
+
+	int neighbour_true_index = offset_setmap[neighbour_relative_index] + index;
+
+	board[neighbour_true_index]++;
+}
+
+// DONE
+void decrement_neighbour(int index, int neighbour_relative_index, char *board, int width, int height)
+{
+	if (i < 0) return;
+
+	int offset_setmap[8] = {
+		- width - 1,
+		- width, 
+		- width + 1,
+		- 1,
+		1,
+		width - 1,
+		width,
+		width + 1
+	};
+
+	int neighbour_true_index = offset_setmap[neighbour_relative_index] + index;
+
+	board[neighbour_true_index]--;
+}
