@@ -15,17 +15,17 @@ int num_cells_board(int width, int height);
 // 	deactivates cell
 // 	decrement neighbour cell counts if cell was previously alive
 // TODO - not implemented
-void set_cell_dead(int i, char *board, int width, int height);
+void set_cell_dead(int index, char *board, int width, int height);
 
 // will update the given board as follows
 // 	activates cell
 // 	increment neighbour cell counts if cell was previously dead
 // TODO - not implemented
-void set_cell_alive(int i, char *board, int width, int height);
+void set_cell_alive(int index, char *board, int width, int height);
 
 // returns 1 if cell is currently set as alive
 // returns 0 otherwise
-int cell_is_alive(char *board, int i);
+int cell_is_alive(char *board, int index);
 
 // returns the number of neighbours given cell has
 int num_neighbours(char cell);
@@ -33,3 +33,6 @@ int num_neighbours(char cell);
 // return the index of the cell for the board
 // returns negative number for error
 int cell_index(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
+
+// replicates the source board into the destination board
+void copy_board(char *src_board, char *dest_board, int width, int height);

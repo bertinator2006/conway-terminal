@@ -1,5 +1,12 @@
 #include "conway.h"
 
+// 
+int num_cells_board(int width, int height)
+{
+	return width * height;
+}
+
+
 //
 void initialise_board(char *board, int width, int height)
 {
@@ -27,8 +34,12 @@ void increment_boardstate(char *curr_board, char *next_board, int width, int hei
 }
 
 //
-int cell_is_alive(char *board, int i)
+int cell_is_alive(char *board, int index)
 {
+	if (i < 0)
+	{
+		return 0;
+	}
 	return board[i] & CELL_ALIVE;
 }
 
@@ -40,27 +51,31 @@ int num_neighbours(char cell)
 }
 
 //
-void set_cell_alive(int i, char *board, int width, int height)
+void set_cell_alive(int index, char *board, int width, int height)
 {
-	if (i > num_cells_board(width, height))
+	if (index < 0 || index > num_cells_board(width, height))
+	{
 		return;
-
-	// check corner
-	int x = i % width;
-	int y = i / width;
-
-	if (x >= width)
+	}
+	
+	if(cell_is_alive(board, index))
+	{
 		return;
+	}
 
-	if (y >= height)
-		return;
+	board[i] = board[i] | CELL_ALIVE;
+	int xpos = index % width;
+    int ypos = index / width;
 
-
-	// TODO
+	int offset_checkmap[9][2] = {
+		{-1, -1}, { 0, -1}, { 1, -1},
+		{-1,  0}, { 0,  0}, { 1,  0},
+		{-1, -1}, { 0, -1}, { 1, -1}
+	}
 
 }
 
-//
+// 
 int cell_index(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 {
 	if (x >= width)
@@ -73,3 +88,14 @@ int cell_index(unsigned int x, unsigned int y, unsigned int width, unsigned int 
 	}
 	return x + y * width;
 }
+
+// 
+void copy_board(char *src_board, char *dest_board, int width, int height)
+{
+	int num_cells = num_cell_board(width, height);
+	for (int i = 0; i < num_cells; i++)
+	{
+		dest_board[i] = src_board[i];
+	}
+}
+
