@@ -3,9 +3,9 @@ BIN = program
 FLAGS = -Wall -Wextra -Wshadow -Wpedantic
 
 def:
-	echo "Please select one of the following:"
-	echo "    make mac"
-	echo "    make win"
+	@echo "Please select one of the following:"
+	@echo "    make mac"
+	@echo "    make win"
 
 mac:
 	clang $(SRC) -o $(BIN) $(FLAGS)

@@ -6,6 +6,7 @@
 
 #define BOARD_WIDTH 10
 #define BOARD_HEIGHT 10
+#define DELAY_MS 500
 
 int main(void)
 {
@@ -19,8 +20,8 @@ int main(void)
 
 	while (1)
 	{
-		print_barrier
-		wait(500);
+		print_barrier();
+		wait(DELAY_MS);
 		print_board(cur_board, BOARD_WIDTH, BOARD_HEIGHT);
 		increment_boardstate(cur_board, next_board, BOARD_WIDTH, BOARD_HEIGHT);
 		copy_board(next_board, cur_board, BOARD_WIDTH, BOARD_HEIGHT);
