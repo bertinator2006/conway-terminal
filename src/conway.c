@@ -40,11 +40,11 @@ void increment_boardstate(char *curr_board, char *next_board, int width, int hei
 // DONE
 bool cell_is_alive(char *board, int index)
 {
-	if (i < 0)
+	if (index < 0)
 	{
 		return 0;
 	}
-	return board[i] & CELL_ALIVE;
+	return board[index] & CELL_ALIVE;
 }
 
 // does not actually count the number of alive neighbours
@@ -64,7 +64,7 @@ void set_cell_alive(int index, char *board, int width, int height)
 // DONE
 void set_cell_dead(int index, char *board, int width, int height)
 {
-	_set_cell_state(inde, false, board, width, height);
+	_set_cell_state(index, false, board, width, height);
 }
 
 // DONE
@@ -84,7 +84,7 @@ int cell_index(unsigned int x, unsigned int y, unsigned int width, unsigned int 
 // DONE
 void copy_board(char *src_board, char *dest_board, int width, int height)
 {
-	int num_cells = num_cell_board(width, height);
+	int num_cells = num_cells_board(width, height);
 	for (int i = 0; i < num_cells; i++)
 	{
 		dest_board[i] = src_board[i];
@@ -106,7 +106,7 @@ void decrement_neighbour(int index, int neighbour_relative_index, char *board, i
 // NOT FOR PUBLIC USE
 void _update_neighbour(int index, int delta, int neighbour_relative_index, char *board, int width, int height)
 {
-		if (i < 0) return;
+	if (index < 0) return;
 
 	int offset_setmap[8] = {
 		- width - 1,
@@ -125,6 +125,8 @@ void _update_neighbour(int index, int delta, int neighbour_relative_index, char 
 }
 
 // NOT FOR PUBLIC USE
+// set_alive is true if the cell is being set to alive
+// set_alive is false if the cell is being set to dead
 int _set_cell_state(int index, bool set_alive, char *board, int width, int height)
 {
 	if (index < 0 || index >= num_cells_board(width, height))
@@ -141,7 +143,6 @@ int _set_cell_state(int index, bool set_alive, char *board, int width, int heigh
 	int xpos = index % width;
     int ypos = index / width;
 
-	// each pair is a pair for the x and y
 	int offset_checkmap[8][2] = {
 		{-1, -1}, { 0, -1}, { 1, -1},
 		{-1,  0}, 			{ 1,  0},
@@ -164,5 +165,8 @@ int _set_cell_state(int index, bool set_alive, char *board, int width, int heigh
 			increment_neighbour(index, i, board, width, height);
 		}
 		else if (within_bounds_x && within_bounds_y && !set_alive)
+		{
+			decrement_neighbour(index, i, board, width, height);
+		}
 	}
 }

@@ -41,7 +41,7 @@ void copy_board(char *src_board, char *dest_board, int width, int height);
 void increment_neighbour(int index, int neighbour_relative_index, char *board, int width, int height);
 
 // decrements_neighbour
-void decrement_neighbour(int index, int neighbour_relative_index, char *board, int width, int height)
+void decrement_neighbour(int index, int neighbour_relative_index, char *board, int width, int height);
 
 // reserves space for and creates an empty board
 char *create_empty_board(int width, int height);

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "conway.h"
 #include "terminal.h"
-#include "wait.h"
 
 #define BOARD_WIDTH 10
 #define BOARD_HEIGHT 10
@@ -21,7 +20,6 @@ int main(void)
 	while (1)
 	{
 		print_barrier();
-		wait(DELAY_MS);
 		print_board(cur_board, BOARD_WIDTH, BOARD_HEIGHT);
 		increment_boardstate(cur_board, next_board, BOARD_WIDTH, BOARD_HEIGHT);
 		copy_board(next_board, cur_board, BOARD_WIDTH, BOARD_HEIGHT);
