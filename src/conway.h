@@ -25,7 +25,7 @@ void set_cell_alive(int index, char *board, int width, int height);
 
 // returns 1 if cell is currently set as alive
 // returns 0 otherwise
-int cell_is_alive(char *board, int index);
+bool cell_is_alive(char *board, int index);
 
 // returns the number of neighbours given cell has
 int num_neighbours(char cell);

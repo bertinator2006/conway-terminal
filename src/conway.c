@@ -110,7 +110,7 @@ void _update_neighbour(int index, int delta, int neighbour_relative_index, char 
 
 	int offset_setmap[8] = {
 		- width - 1,
-		- width, 
+		- width,
 		- width + 1,
 		- 1,
 		1,
@@ -131,21 +131,21 @@ int _set_cell_state(int index, bool set_alive, char *board, int width, int heigh
 {
 	if (index < 0 || index >= num_cells_board(width, height))
 	{
-		return;
+		return -1;
 	}
-	
+
 	if(cell_is_alive(board, index))
 	{
-		return;
+		return -2;
 	}
 
 	board[index] = board[index] | CELL_ALIVE;
 	int xpos = index % width;
-    int ypos = index / width;
+	int ypos = index / width;
 
 	int offset_checkmap[8][2] = {
 		{-1, -1}, { 0, -1}, { 1, -1},
-		{-1,  0}, 			{ 1,  0},
+		{-1,  0}, 	    { 1,  0},
 		{-1,  1}, { 0,  1}, { 1,  1}
 	};
 
