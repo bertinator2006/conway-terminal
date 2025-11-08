@@ -169,4 +169,5 @@ int _set_cell_state(int index, bool set_alive, char *board, int width, int heigh
 			decrement_neighbour(index, i, board, width, height);
 		}
 	}
+	return 0;
 }
