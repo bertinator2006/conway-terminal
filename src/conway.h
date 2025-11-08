@@ -1,47 +1,42 @@
-#define CELL_ALIVE 0b10000000
-#define CELLINDEX_X_INVALID -1
-#define CELLINDEX_Y_INVALID -2
+#ifndef CONWAY_H
+#define CONWAY_H
 
-// initialises board with all 0's
-void clear_board(char *board, int width, int height);
+#define X_OUT_BOUNDS -1
+#define Y_OUT_BOUNDS -2
+#define CELL_EMPTY 0
+#define SUCCESS 0
 
-// increments the board state to the next board state
-void increment_boardstate(char *curr_board, char *next_board, int width, int height);
+typedef struct Board {
+	char *grid;
+	char *next_grid;
+	int width;
+	int height;
+} Board;
 
-// gets the number of cells in board
-int num_cells_board(int width, int height);
+// creates empty board
+// Needs to be destroyed at end of program with destroy_board
+Board init_empty_board(int width, int height);
 
-// will update the given board as follows:
-// 	deactivates cell
-// 	decrement neighbour cell counts if cell was previously alive
-// TODO - not implemented
-void set_cell_dead(int index, char *board, int width, int height);
+// turns the cell in the given position on
+void create_cell(Board board, int x, int y);
 
-// will update the given board as follows
-// 	activates cell
-// 	increment neighbour cell counts if cell was previously dead
-// TODO - not implemented
-void set_cell_alive(int index, char *board, int width, int height);
+// deletes the cell in the given position
+void delete_cell(Board board, int x, int y);
 
-// returns 1 if cell is currently set as alive
-// returns 0 otherwise
-bool cell_is_alive(char *board, int index);
+// initialises a board from a text file
+// the format for this can be found in example_board.txt
+Board init_board_from_file(char *file_name);
 
-// returns the number of neighbours given cell has
-int num_neighbours(char cell);
+// moves the board_state ahead by one
+void increment_state(Board board);
 
-// return the index of the cell for the board
-// returns negative number for error
-int cell_index(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
+// checks if the cell at given position is alive
+// returns CELL_ALIVE if cell is alive
+// returns CELL_DEAD if cell is dead
+// returns negative numbers for errors
+int cell_state(Board board, int x, int y);
 
-// replicates the source board into the destination board
-void copy_board(char *src_board, char *dest_board, int width, int height);
+// Needs to be called for every init_board called
+void free_board(Board board);
 
-// increments a neighbour
-void increment_neighbour(int index, int neighbour_relative_index, char *board, int width, int height);
-
-// decrements_neighbour
-void decrement_neighbour(int index, int neighbour_relative_index, char *board, int width, int height);
-
-// reserves space for and creates an empty board
-char *create_empty_board(int width, int height);
+#endif

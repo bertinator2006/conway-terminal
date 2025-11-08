@@ -1,6 +1,8 @@
 SRC = src/conway.c src/main.c
 BIN = program
-FLAGS = 
+
+all:
+	make wsl
 
 def:
 	@echo "Please select one of the following:"
@@ -16,4 +18,5 @@ win:
 	@echo "gcc $(SRC) -o $(BIN) $(FLAGS)"
 	gcc $(SRC) -o $(BIN) $(FLAGS)
 
-wsl:
+clean:
+	rm $(BIN)

@@ -1,173 +1,120 @@
 #include <stdbool.h>
+#include <stdlib.h>
 #include "conway.h"
 
-// PRIVATE HELPER FUNCTIONS
-void _update_neighbour(int index, int delta, int neighbour_relative_index, char *board, int width, int height);
-int _set_cell_state(int index, bool set_alive, char *board, int width, int height);
+#define SET_STATE_ALIVE 1
+#define SET_STATE_DEAD 0
+#define MODE_DECREMENT -1
+#define MODE_INCREMENT 1
+#define ALIVE_CELL 0b10000000
+#define STATE_ALIVE 1
+#define STATE_DEAD 0
 
-// DONE
-int num_cells_board(int width, int height)
-{
-	return width * height;
-}
 
-// DONE
-void clear_board(char *board, int width, int height)
+int num_cells(Board board);
+void increment_neighbour_buffer(Board board, int index, int relative_index);
+void decrement_neighbour_buffer(Board board, int index, int relative_index);
+void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode); // TODO
+void set_cell_dead_buffer(Board board, int index);
+void set_cell_alive_buffer(Board board, int index);
+void set_cell_state_buffer(Board board, int index, int set_state_mode); // TODO
+int num_neighbours(Board board, int index);
+bool is_cell_alive(Board board, int index);
+
+// Uses malloc
+Board init_empty_board(int width, int height)
 {
-	for (int i = 0; i < num_cells_board(width, height); i++)
+	Board board;
+	board.width = width;
+	board.height = height;
+	board.grid = malloc(sizeof(char) * width * height);
+	board.next_grid = malloc(sizeof(char) * width * height);
+
+	int cell_count = num_cells(board);
+	for (int i = 0; i < cell_count; i++)
 	{
-		board[i] = 0;
+		board.grid[i] = CELL_EMPTY;
+		board.next_grid[i] = CELL_EMPTY;
 	}
+
+	return board;
 }
 
-// DONE
-void increment_boardstate(char *curr_board, char *next_board, int width, int height)
+// TODO
+void create_cell(Board board, int x, int y);
+
+// TODO
+void delete_cell(Board board, int x, int y);
+
+// TODO
+Board init_board_from_file(char *file_name);
+
+// TODO
+void increment_state(Board board)
 {
-	for (int i = 0; i < num_cells_board(width, height); i++)
+	int width = board.width;
+	int height = board.height;
+	char *curr_board = board.grid;
+	char *next_board = board.next_grid;
+	for (int i = 0; i < num_cells(board); i++)
 	{
-		int neighbours = num_neighbours(curr_board[i]);
-		int cell_alive = cell_is_alive(curr_board, i);
+		int neighbours = num_neighbours(board, i);
+		int cell_alive = is_cell_alive(board, i);
 		if (cell_alive &&neighbours < 2) {
-			set_cell_dead(i, next_board, width, height);
+			set_cell_dead_buffer(board, i);
 		} else if (!cell_alive && neighbours == 3) {
-			set_cell_alive(i, next_board, width, height);
+			set_cell_alive_buffer(board, i);
 		} else if (cell_alive && neighbours >= 4) {
-			set_cell_dead(i, next_board, width, height);
+			set_cell_dead(board, i);
 		}
 	}
 }
 
-// DONE
-bool cell_is_alive(char *board, int index)
-{
-	if (index < 0)
-	{
-		return 0;
-	}
-	return board[index] & CELL_ALIVE;
-}
+// TODO
+int cell_state(Board board, int x, int y);
 
-// does not actually count the number of alive neighbours
-// checks the last 4 bits in given char
+
 // DONE
-int num_neighbours(char cell)
+void set_cell_dead_buffer(Board board, int index)
 {
-	return cell & 0x0f;
+	set_cell_state_buffer(board, index, STATE_DEAD);
 }
 
 // DONE
-void set_cell_alive(int index, char *board, int width, int height)
+void set_cell_alive_buffer(Board board, int index)
 {
-	_set_cell_state(index, true, board, width, height);
+	set_cell_state_buffer(board, index, STATE_ALIVE);
 }
 
 // DONE
-void set_cell_dead(int index, char *board, int width, int height)
+int num_cells(Board board)
 {
-	_set_cell_state(index, false, board, width, height);
+	return board.width * board.height;
 }
 
 // DONE
-int cell_index(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
+bool is_cell_alive(Board board, int index)
 {
-	if (x >= width)
-	{
-		return CELLINDEX_X_INVALID;
-	}
-	if (y >= height)
-	{
-		return CELLINDEX_Y_INVALID;
-	}
-	return x + y * width;
+	return board.grid[index] & ALIVE_CELL;
 }
 
 // DONE
-void copy_board(char *src_board, char *dest_board, int width, int height)
+int num_neighbours(Board board, int index)
 {
-	int num_cells = num_cells_board(width, height);
-	for (int i = 0; i < num_cells; i++)
-	{
-		dest_board[i] = src_board[i];
-	}
+	return board.grid[index] & 0x0f;
 }
 
-// DONE
-void increment_neighbour(int index, int neighbour_relative_index, char *board, int width, int height)
+void increment_neighbour_buffer(Board board, int index, int relative_index)
 {
-	_update_neighbour(index, 1, neighbour_relative_index, board, width, height);
+	update_neighbour_buffer(board, index, relative_index, MODE_INCREMENT);
 }
 
-// DONE
-void decrement_neighbour(int index, int neighbour_relative_index, char *board, int width, int height)
+void decrement_neighbour_buffer(Board board, int index, int relative_index)
 {
-	_update_neighbour(index, -1, neighbour_relative_index, board, width, height);
+	update_neighbour_buffer(board, index, relative_index, MODE_DECREMENT);
 }
 
-// NOT FOR PUBLIC USE
-void _update_neighbour(int index, int delta, int neighbour_relative_index, char *board, int width, int height)
+void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode)
 {
-	if (index < 0) return;
 
-	int offset_setmap[8] = {
-		- width - 1,
-		- width,
-		- width + 1,
-		- 1,
-		1,
-		width - 1,
-		width,
-		width + 1
-	};
-
-	int neighbour_true_index = offset_setmap[neighbour_relative_index] + index;
-
-	board[neighbour_true_index] += delta;
-}
-
-// NOT FOR PUBLIC USE
-// set_alive is true if the cell is being set to alive
-// set_alive is false if the cell is being set to dead
-int _set_cell_state(int index, bool set_alive, char *board, int width, int height)
-{
-	if (index < 0 || index >= num_cells_board(width, height))
-	{
-		return -1;
-	}
-
-	if(cell_is_alive(board, index))
-	{
-		return -2;
-	}
-
-	board[index] = board[index] | CELL_ALIVE;
-	int xpos = index % width;
-	int ypos = index / width;
-
-	int offset_checkmap[8][2] = {
-		{-1, -1}, { 0, -1}, { 1, -1},
-		{-1,  0}, 	    { 1,  0},
-		{-1,  1}, { 0,  1}, { 1,  1}
-	};
-
-	int offset_x;
-	int offset_y;
-	bool within_bounds_x;
-	bool within_bounds_y;
-
-	for (int i = 0; i < 8; i++)
-	{
-		offset_x = offset_checkmap[i][0];
-		offset_y = offset_checkmap[i][1];
-		within_bounds_x = (offset_x + xpos < width) && (offset_x + xpos >= 0);
-		within_bounds_y = (offset_y + ypos < height) && (offset_y + ypos >= 0);
-		if (within_bounds_x && within_bounds_y && set_alive)
-		{
-			increment_neighbour(index, i, board, width, height);
-		}
-		else if (within_bounds_x && within_bounds_y && !set_alive)
-		{
-			decrement_neighbour(index, i, board, width, height);
-		}
-	}
-	return 0;
 }
