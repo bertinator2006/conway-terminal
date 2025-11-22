@@ -13,26 +13,36 @@
 int num_cells(Board board);
 void increment_neighbour_buffer(Board board, int index, int relative_index);
 void decrement_neighbour_buffer(Board board, int index, int relative_index);
-void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode); // TODO
+void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode);
 void set_cell_dead_buffer(Board board, int index);
 void set_cell_alive_buffer(Board board, int index);
-void set_cell_state_buffer(Board board, int index, int set_state_mode); // TODO
+void set_cell_state_buffer(Board board, int index, int set_state_mode);
 int num_neighbours(Board board, int index);
 bool is_cell_alive(Board board, int index);
 
-// TODO
+// UNTESTED
 void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode)
 {
     if (index < 0) return;
 
 	int delta = update_mode == MODE_INCREMENT ? 1 : -1;
 
+    int offset_setmap = [
+        -board.width - 1,
+        -board.width,
+        -board.width + 1,
+         -1,
+         1,
+        board.width - 1,
+        board.width,
+        board.width + 1
+    ]
 	int true_index = offset_setmap[relative_index] + index;
 
 	board.next_grid[true_index] += delta;
 }
 
-// TODO
+// UNTESTED
 void set_cell_state_buffer(Board board, int index, int state)
 {
     if (state == SET_STATE_ALIVE)
@@ -69,13 +79,11 @@ void set_cell_state_buffer(Board board, int index, int state)
         bool within_bounds = within_bounds_x  && within_bounds_y;
         if (within_bounds && state == SET_STATE_ALIVE)
         {
-            int relative_index = i + (i >= 4);
-            increment_neighbour_buffer(board, index, relative_index);
+            increment_neighbour_buffer(board, index, i);
         }
         else if (within_bounds && state == SET_STATE_DEAD)
         {
-            int relative_index = i + (i >= 4);
-            decrement_neighbour_buffer(board, index, relative_index);
+            decrement_neighbour_buffer(board, index, i);
         }
     }
     return;
