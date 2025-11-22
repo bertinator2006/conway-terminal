@@ -43,6 +43,7 @@ void update_neighbour_buffer(Board board, int index, int relative_index, int upd
 	board.next_grid[true_index] += delta;
 }
 
+// TODO
 void set_cell_state_buffer(Board board, int index, int state)
 {
     return;
