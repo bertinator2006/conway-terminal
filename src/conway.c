@@ -43,6 +43,10 @@ void set_cell_state_buffer(Board board, int index, int state)
     {
         board.next_grid[index] &= ~ALIVE_CELL;
     }
+    else
+    {
+        return;
+    }
 
 	int offset_setmap[8][2] = {
         {-1, -1}, { 0, -1}, { 1, -1},
@@ -62,10 +66,16 @@ void set_cell_state_buffer(Board board, int index, int state)
         y += offset_y;
         bool within_bounds_x = x >= 0 && x <= board.width;
         bool within_bounds_y = y >= 0 && y <= board.width;
-        if (within_bounds_x && within_bounds_y && state == SET_STATE_ALIVE)
+        bool within_bounds = within_bounds_x  && within_bounds_y;
+        if (within_bounds && state == SET_STATE_ALIVE)
         {
-// void increment_neighbour_buffer(Board board, int index, int relative_index);
-            increment_neighbour_buffer(board, index, )
+            int relative_index = i + (i >= 4);
+            increment_neighbour_buffer(board, index, relative_index);
+        }
+        else if (within_bounds && state == SET_STATE_DEAD)
+        {
+            int relative_index = i + (i >= 4);
+            decrement_neighbour_buffer(board, index, relative_index);
         }
     }
     return;
