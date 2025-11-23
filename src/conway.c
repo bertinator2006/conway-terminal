@@ -10,6 +10,7 @@
 #define STATE_ALIVE 1
 #define STATE_DEAD 0
 
+// internal helper functions only
 int num_cells(Board board);
 void increment_neighbour_buffer(Board board, int index, int relative_index);
 void decrement_neighbour_buffer(Board board, int index, int relative_index);
@@ -20,7 +21,6 @@ void set_cell_state_buffer(Board board, int index, int set_state_mode);
 int num_neighbours(Board board, int index);
 bool is_cell_alive(Board board, int index);
 
-// UNTESTED
 void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode)
 {
     if (index < 0) return;
@@ -42,7 +42,6 @@ void update_neighbour_buffer(Board board, int index, int relative_index, int upd
 	board.next_grid[true_index] += delta;
 }
 
-// UNTESTED
 void set_cell_state_buffer(Board board, int index, int state)
 {
     if (state == SET_STATE_ALIVE)
