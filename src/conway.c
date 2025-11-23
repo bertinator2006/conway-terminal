@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "conway.h"
 
 #define SET_STATE_ALIVE 1
@@ -27,18 +28,18 @@ void update_neighbour_buffer(Board board, int index, int relative_index, int upd
 
 	int delta = update_mode == MODE_INCREMENT ? 1 : -1;
 
-    int offset_setmap = [
-        -board.width - 1,
-        -board.width,
-        -board.width + 1,
-         -1,
-         1,
-        board.width - 1,
-        board.width,
-        board.width + 1
-    ]
-	int true_index = offset_setmap[relative_index] + index;
+  int offset_setmap[8] = {
+    -board.width - 1,
+    -board.width,
+    -board.width + 1,
+    -1,
+    1,
+    board.width - 1,
+    board.width,
+    board.width + 1
+  };
 
+	int true_index = offset_setmap[relative_index] + index;
 	board.next_grid[true_index] += delta;
 }
 
@@ -59,7 +60,7 @@ void set_cell_state_buffer(Board board, int index, int state)
 
 	int offset_setmap[8][2] = {
         {-1, -1}, { 0, -1}, { 1, -1},
-        {-1,  0},         , { 1,  0},
+        {-1,  0},           { 1,  0},
         {-1,  1}, { 0,  1}, { 1,  1}
 	};
 
@@ -69,8 +70,8 @@ void set_cell_state_buffer(Board board, int index, int state)
     uint8_t offset_y;
     for (int i = 0; i < 8; i++)
     {
-        offset_x = offset_x[i][0];
-        offset_y = offset_y[i][1];
+        offset_x = offset_setmap[i][0];
+        offset_y = offset_set[i][1];
         x += offset_x;
         y += offset_y;
         bool within_bounds_x = x >= 0 && x <= board.width;

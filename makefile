@@ -5,4 +5,5 @@ all:
 	gcc $(SRC) -o $(BIN)
 
 run:
-    ./$(BIN)
+	./$(BIN)
+
