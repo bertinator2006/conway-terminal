@@ -24,19 +24,18 @@ bool is_cell_alive(Board board, int index);
 
 void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode)
 {
-    if (index < 0) return;
+	if (index < 0) return;
 
 	int delta = update_mode == MODE_INCREMENT ? 1 : -1;
-
-  int offset_setmap[8] = {
-    -board.width - 1,
-    -board.width,
-    -board.width + 1,
-    -1,
-    1,
-    board.width - 1,
-    board.width,
-    board.width + 1
+	int offset_setmap[8] = {
+		-board.width - 1,
+		-board.width,
+		-board.width + 1,
+		-1,
+		1,
+		board.width - 1,
+		board.width,
+		board.width + 1
   };
 
 	int true_index = offset_setmap[relative_index] + index;
@@ -45,54 +44,56 @@ void update_neighbour_buffer(Board board, int index, int relative_index, int upd
 
 void set_cell_state_buffer(Board board, int index, int state)
 {
-    if (state == SET_STATE_ALIVE)
-    {
-        board.next_grid[index] |= ALIVE_CELL;
-    }
-    else if (state == SET_STATE_DEAD)
-    {
-        board.next_grid[index] &= ~ALIVE_CELL;
-    }
-    else
-    {
-        return;
-    }
+	if (state == SET_STATE_ALIVE)
+	{
+		board.next_grid[index] |= ALIVE_CELL;
+	}
+	else if (state == SET_STATE_DEAD)
+	{
+		board.next_grid[index] &= ~ALIVE_CELL;
+	}
+	else
+	{
+		return;
+	}
 
 	int offset_setmap[8][2] = {
-        {-1, -1}, { 0, -1}, { 1, -1},
-        {-1,  0},           { 1,  0},
-        {-1,  1}, { 0,  1}, { 1,  1}
+		{-1, -1}, { 0, -1}, { 1, -1},
+		{-1,  0}, { 1,  0},
+		{-1,  1}, { 0,  1}, { 1,  1}
 	};
 
-    int x = index % board.width;
-    int y = index / board.width;
-    uint8_t offset_x;
-    uint8_t offset_y;
-    for (int i = 0; i < 8; i++)
-    {
-        offset_x = offset_setmap[i][0];
-        offset_y = offset_set[i][1];
-        x += offset_x;
-        y += offset_y;
-        bool within_bounds_x = x >= 0 && x <= board.width;
-        bool within_bounds_y = y >= 0 && y <= board.width;
-        bool within_bounds = within_bounds_x  && within_bounds_y;
-        if (within_bounds && state == SET_STATE_ALIVE)
-        {
-            increment_neighbour_buffer(board, index, i);
-        }
-        else if (within_bounds && state == SET_STATE_DEAD)
-        {
-            decrement_neighbour_buffer(board, index, i);
-        }
-    }
-    return;
+	int x = index % board.width;
+	int y = index / board.width;
+	uint8_t offset_x;
+	uint8_t offset_y;
+	for (int i = 0; i < 8; i++)
+	{
+		offset_x = offset_setmap[i][0];
+		offset_y = offset_setmap[i][1];
+		x += offset_x;
+		y += offset_y;
+		bool within_bounds_x = x >= 0 && x <= board.width;
+		bool within_bounds_y = y >= 0 && y <= board.width;
+		bool within_bounds = within_bounds_x  && within_bounds_y;
+		if (within_bounds && state == SET_STATE_ALIVE)
+		{
+
+			increment_neighbour_buffer(board, index, i);
+		}
+		else if (within_bounds && state == SET_STATE_DEAD)
+		{
+
+			decrement_neighbour_buffer(board, index, i);
+		}
+	}
+	return;
 }
 
 void destroy_board(Board board)
 {
-    free(board.grid);
-    free(board.next_grid);
+	free(board.grid);
+	free(board.next_grid);
 }
 
 int num_cells(Board board)
@@ -157,9 +158,8 @@ void increment_state(Board board)
 
 bool cell_alive(Board board, int x, int y)
 {
-    if (x < 0 || x >= board.width || y < 0 || y >= board.height)
-        return false;
-    return board.grid[y * board.width + x] & ALIVE_CELL;
+	if (x < 0 || x >= board.width || y < 0 || y >= board.height) return false;
+	return board.grid[y * board.width + x] & ALIVE_CELL;
 }
 
 Board init_empty_board(int width, int height)
@@ -179,4 +179,3 @@ Board init_empty_board(int width, int height)
 
 	return board;
 }
-
