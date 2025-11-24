@@ -33,8 +33,6 @@ board load_board_file(const char *board_file_name)
         fprintf(stderr, "Error opening file: %s\n", board_file_name);
         exit(EXIT_FAILURE)
     }
-
-    
 }
 
 void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode)
