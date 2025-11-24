@@ -10,6 +10,8 @@
 #define ALIVE_CELL 0b10000000
 #define STATE_ALIVE 1
 #define STATE_DEAD 0
+#define FILE_CHAR_ALIVE '1'
+#define FILE_CHAR_DEAD '0'
 
 // internal helper functions only
 int num_cells(Board board);
@@ -21,6 +23,19 @@ void set_cell_alive_buffer(Board board, int index);
 void set_cell_state_buffer(Board board, int index, int set_state_mode);
 int num_neighbours(Board board, int index);
 bool is_cell_alive(Board board, int index);
+
+// TODO
+board load_board_file(const char *board_file_name)
+{
+    FILE *board_file = fopen(board_file_name, "r");
+    if (board_file == NULL)
+    {
+        fprintf(stderr, "Error opening file: %s\n", board_file_name);
+        exit(EXIT_FAILURE)
+    }
+
+    
+}
 
 void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode)
 {
