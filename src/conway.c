@@ -28,6 +28,7 @@ bool is_cell_alive(Board board, int index);
 // TODO
 board create_board_from_file(const char *board_file_name)
 {
+    Board board;
     FILE *board_file = fopen(board_file_name, "r");
     if (board_file == NULL)
     {
@@ -37,13 +38,38 @@ board create_board_from_file(const char *board_file_name)
 
     char buffer[MAX_SIZE] = {0};
 
+    char *result = fgets(buffer, MAX_SIZE, board_file);
+    if (result == NULL)
+    {
+        fprintf(stderr, "Error reading the file.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    int width = 0;
+    int height = 0;
+    for (int i = 0; buffer[i] != '\n' && buffer[i] != '\0'; i++)
+    {
+        width++;
+    }
+    height++;
+
     while (fgets(buffer, MAX_SIZE, board_file) != NULL)
     {
-        for (int i = 0; buffer[i] != '\n' && buffer[i] != '\0'; i++)
-        {
-
-        }
+        height++;
     }
+    fseek(board_file, 0, SEEK_SET);
+    
+    board.width = width;
+    board.height = height;
+
+    board.grid = NULL;
+    board.next_grid = NULL;
+
+    // TODO: Remove this return statement after implementing the rest of the code properly
+    return board;
+
+    board.grid = malloc(num_cells(board));
+    board.next_grid = malloc(num_cells(board));
 }
 
 void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode)

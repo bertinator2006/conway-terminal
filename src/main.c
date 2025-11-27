@@ -9,7 +9,7 @@
 int main(void)
 {
 	printf("Starting game...\n");
-	Board board = init_empty_board(WIDTH, HEIGHT);
+	Board board = (WIDTH, HEIGHT);
 
 	print_board(board);
 

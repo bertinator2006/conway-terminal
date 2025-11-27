@@ -29,4 +29,7 @@ bool cell_alive(Board board, int x, int y);
 // Needs to be called for every init_board called
 void destroy_board(Board board);
 
+// Gets a board from a file
+Board create_board_from_file(const char *board_file_name);
+
 #endif
