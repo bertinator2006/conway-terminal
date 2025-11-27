@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include "conway.h"
 
+#define MAX_SIZE 4000
 #define SET_STATE_ALIVE 1
 #define SET_STATE_DEAD 0
 #define MODE_DECREMENT -1
@@ -25,13 +26,23 @@ int num_neighbours(Board board, int index);
 bool is_cell_alive(Board board, int index);
 
 // TODO
-board load_board_file(const char *board_file_name)
+board create_board_from_file(const char *board_file_name)
 {
     FILE *board_file = fopen(board_file_name, "r");
     if (board_file == NULL)
     {
         fprintf(stderr, "Error opening file: %s\n", board_file_name);
-        exit(EXIT_FAILURE)
+        exit(EXIT_FAILURE);
+    }
+
+    char buffer[MAX_SIZE] = {0};
+
+    while (fgets(buffer, MAX_SIZE, board_file) != NULL)
+    {
+        for (int i = 0; buffer[i] != '\n' && buffer[i] != '\0'; i++)
+        {
+
+        }
     }
 }
 
