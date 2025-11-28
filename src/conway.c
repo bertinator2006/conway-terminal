@@ -1,3 +1,4 @@
+#include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -22,7 +23,7 @@ void decrement_neighbour_buffer(Board board, int index, int relative_index);
 void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode);
 void set_cell_dead_buffer(Board board, int index);
 void set_cell_alive_buffer(Board board, int index);
-void set_cell_state_buffer(Board board, int index, int set_state_mode);
+void set_cell_state_buffer(Board board, int index, int state);
 int num_neighbours(Board board, int index);
 bool is_cell_alive(Board board, int index);
 
@@ -54,23 +55,52 @@ Board create_board_from_file(const char *board_file_name)
     }
     height++;
 
+    int i;
     while (fgets(buffer, MAX_SIZE, board_file) != NULL)
     {
+        i = 0;
+        for (int x = 0; buffer[x] != '\n' && buffer[x] != '\0'; x++)
+        {
+            if (buffer[x] != '0' && buffer[x] != '1')
+            {
+                fprintf(stderr, "File has inconsistent width.\n");
+                exit(1);
+            }
+        }
+
         height++;
     }
-    fseek(board_file, 0, SEEK_SET);
 
     board.width = width;
     board.height = height;
 
     board.grid = NULL;
     board.next_grid = NULL;
+    int cell_count = num_cells(board);
+    board.grid = malloc(cell_count);
+    board.next_grid = malloc(cell_count);
 
-    // TODO: Remove this return statement after implementing the rest of the code properly
+    memset(board.grid, 0, cell_count);
+    memset(board.next_grid, 0, cell_count);
+
+    fseek(board_file, 0, SEEK_SET);
+    int counter = 0;
+    while (fgets(buffer, MAX_SIZE, board_file) != NULL)
+    {
+        for (int i = 0; i < width; i++)
+        {
+            if (buffer[i] == '1')
+            {
+                // TODO replace this with next line
+                board.next_grid[i] = ALIVE_CELL;
+                // set_cell_alive_buffer(board, count);
+            }
+            counter++;
+        }
+    }
+
+    memcpy(board.grid, board.next_grid, cell_count);
     return board;
-
-    board.grid = malloc(num_cells(board));
-    board.next_grid = malloc(num_cells(board));
 }
 
 void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode)
@@ -78,7 +108,7 @@ void update_neighbour_buffer(Board board, int index, int relative_index, int upd
 	if (index < 0) return;
 
 	int delta = update_mode == MODE_INCREMENT ? 1 : -1;
-	int offset_setmap[8] = {
+    int offset_setmap[8] = {
 		-board.width - 1,
 		-board.width,
 		-board.width + 1,
@@ -87,7 +117,7 @@ void update_neighbour_buffer(Board board, int index, int relative_index, int upd
 		board.width - 1,
 		board.width,
 		board.width + 1
-  };
+    };
 
 	int true_index = offset_setmap[relative_index] + index;
 	board.next_grid[true_index] += delta;
@@ -174,11 +204,21 @@ void decrement_neighbour_buffer(Board board, int index, int relative_index)
 
 void set_cell_dead_buffer(Board board, int index)
 {
+    bool cell_alive = is_cell_alive(board, index);
+    if (!cell_alive)
+    {
+        return;
+    }
 	set_cell_state_buffer(board, index, STATE_DEAD);
 }
 
 void set_cell_alive_buffer(Board board, int index)
 {
+    bool cell_alive = is_cell_alive(board, index);
+    if (cell_alive)
+    {
+        return;
+    }
 	set_cell_state_buffer(board, index, STATE_ALIVE);
 }
 
