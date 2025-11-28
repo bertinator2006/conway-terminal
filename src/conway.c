@@ -92,8 +92,12 @@ Board create_board_from_file(const char *board_file_name)
             if (buffer[i] == '1')
             {
                 // TODO replace this with next line
-                board.next_grid[i] = ALIVE_CELL;
+                board.next_grid[counter] |= ALIVE_CELL;
                 // set_cell_alive_buffer(board, count);
+            }
+            else if (buffer[i] == '0')
+            {
+                board.next_grid[counter] &= ~ALIVE_CELL;
             }
             counter++;
         }
@@ -234,14 +238,17 @@ void increment_state(Board board)
 		int cell_alive = is_cell_alive(board, i);
 		if (cell_alive &&neighbours < 2)
 		{
+            printf("cell_alive &&neighbours < 2\n");
 			set_cell_dead_buffer(board, i);
 		}
 		else if (!cell_alive && neighbours == 3)
 		{
+            printf("!cell_alive && neighbours == 3\n");
 			set_cell_alive_buffer(board, i);
 		}
 		else if (cell_alive && neighbours >= 4)
 		{
+            printf("cell_alive && neighbours >= 4\n");
 			set_cell_dead_buffer(board, i);
 		}
 	}

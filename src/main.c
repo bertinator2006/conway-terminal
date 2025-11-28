@@ -19,6 +19,9 @@ int main(int argc, char *argv[])
 	Board board = create_board_from_file(argv[1]);
 
     info_board(board);
+    increment_state(board);
+    print_separator(board);
+    print_board(board);
 
 	return 0;
 }

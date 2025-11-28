@@ -22,7 +22,7 @@ void print_board(Board board)
     {
         for (int j = 0; j < board.width; j++)
         {
-            print_cell(board, i, j);
+            print_cell(board, j, i);
         }
         printf("\n");
     }
@@ -34,3 +34,14 @@ void info_board(Board board)
     printf("Height: %d\n", board.height);
     print_board(board);
 }
+
+void print_separator(Board board)
+{
+    int width = board.width;
+    for (int i = 0; i < width; i++)
+    {
+        printf("==");
+    }
+    printf("\n");
+}
+
