@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdio.h>
 #include "conway.h"
 
 #define MAX_SIZE 4000
@@ -26,7 +27,7 @@ int num_neighbours(Board board, int index);
 bool is_cell_alive(Board board, int index);
 
 // TODO
-board create_board_from_file(const char *board_file_name)
+Board create_board_from_file(const char *board_file_name)
 {
     Board board;
     FILE *board_file = fopen(board_file_name, "r");
@@ -58,7 +59,7 @@ board create_board_from_file(const char *board_file_name)
         height++;
     }
     fseek(board_file, 0, SEEK_SET);
-    
+
     board.width = width;
     board.height = height;
 

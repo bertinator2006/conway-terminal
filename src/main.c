@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "terminal.h"
 #include "conway.h"
 
@@ -8,8 +9,14 @@
 
 int main(int argc, char *argv[])
 {
+    if (argc != 2)
+    {
+        fprintf(stderr, "Usage:\n\t./program [file]\n");
+        exit(EXIT_FAILURE);
+    }
+
 	printf("Starting game...\n");
-	Board board = init_board_from_file(WIDTH, HEIGHT);
+	Board board = create_board_from_file(argv[1]);
 
     info_board(board);
 
