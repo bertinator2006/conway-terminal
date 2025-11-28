@@ -6,12 +6,12 @@
 #define HEIGHT 10
 
 
-int main(void)
+int main(int argc, char *argv[])
 {
 	printf("Starting game...\n");
-	Board board = (WIDTH, HEIGHT);
+	Board board = init_board_from_file(WIDTH, HEIGHT);
 
-	print_board(board);
+    info_board(board);
 
 	return 0;
 }

@@ -27,3 +27,11 @@ void print_board(Board board)
         printf("\n");
     }
 }
+
+void info_board(Board board)
+{
+    printf("Width: %d\n", board.width);
+    printf("Height: %d\n", board.height);
+    print_board(board);
+
+}
