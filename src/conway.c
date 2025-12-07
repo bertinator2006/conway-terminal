@@ -252,6 +252,8 @@ void increment_state(Board board)
 			set_cell_dead_buffer(board, i);
 		}
 	}
+	
+	memcpy(board.grid, board.next_grid, num_cells(board));
 }
 
 bool cell_alive(Board board, int x, int y)
