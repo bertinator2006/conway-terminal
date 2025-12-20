@@ -175,7 +175,7 @@ void set_cell_state_buffer(Board board, int index, int state)
 	return;
 }
 
-void destroy_board(Board board)
+void destroy_board(Board board)	
 {
 	free(board.grid);
 	free(board.next_grid);
@@ -267,10 +267,11 @@ Board init_empty_board(int width, int height)
 	Board board;
 	board.width = width;
 	board.height = height;
-	board.grid = malloc(sizeof(char) * width * height);
-	board.next_grid = malloc(sizeof(char) * width * height);
-
 	int cell_count = num_cells(board);
+
+	board.grid = malloc(sizeof(char) * cell_count);
+	board.next_grid = malloc(sizeof(char) * cell_count);
+
 	for (int i = 0; i < cell_count; i++)
 	{
 		board.grid[i] = CELL_EMPTY;
