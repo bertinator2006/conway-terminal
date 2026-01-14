@@ -30,81 +30,81 @@ bool is_cell_alive(Board board, int index);
 // TODO
 Board create_board_from_file(const char *board_file_name)
 {
-    Board board;
-    FILE *board_file = fopen(board_file_name, "r");
-    if (board_file == NULL)
-    {
-        fprintf(stderr, "Error opening file: %s\n", board_file_name);
-        exit(EXIT_FAILURE);
-    }
+	Board board;
+	FILE *board_file = fopen(board_file_name, "r");
+	if (board_file == NULL)
+	{
+		fprintf(stderr, "Error opening file: %s\n", board_file_name);
+		exit(EXIT_FAILURE);
+	}
 
-    char buffer[MAX_SIZE] = {0};
+	char buffer[MAX_SIZE] = {0};
 
-    char *result = fgets(buffer, MAX_SIZE, board_file);
-    if (result == NULL)
-    {
-        fprintf(stderr, "Error reading the file.\n");
-        exit(EXIT_FAILURE);
-    }
+	char *result = fgets(buffer, MAX_SIZE, board_file);
+	if (result == NULL)
+	{
+		fprintf(stderr, "Error reading the file.\n");
+		exit(EXIT_FAILURE);
+	}
 
-    int width = 0;
-    int height = 0;
-    for (int i = 0; buffer[i] != '\n' && buffer[i] != '\0'; i++)
-    {
-        width++;
-    }
-    height++;
+	int width = 0;
+	int height = 0;
+	for (int i = 0; buffer[i] != '\n' && buffer[i] != '\0'; i++)
+	{
+		width++;
+	}
+	height++;
 
-    int i;
-    while (fgets(buffer, MAX_SIZE, board_file) != NULL)
-    {
-        i = 0;
-        for (int x = 0; buffer[x] != '\n' && buffer[x] != '\0'; x++)
-        {
-            if (buffer[x] != '0' && buffer[x] != '1')
-            {
-                fprintf(stderr, "File has inconsistent width.\n");
-                exit(1);
-            }
-        }
+	int i;
+	while (fgets(buffer, MAX_SIZE, board_file) != NULL)
+	{
+		i = 0;
+		for (int x = 0; buffer[x] != '\n' && buffer[x] != '\0'; x++)
+		{
+			if (buffer[x] != '0' && buffer[x] != '1')
+			{
+				fprintf(stderr, "File has inconsistent width.\n");
+				exit(1);
+			}
+		}
 
-        height++;
-    }
+		height++;
+	}
 
-    board.width = width;
-    board.height = height;
+	board.width = width;
+	board.height = height;
 
-    board.grid = NULL;
-    board.next_grid = NULL;
-    int cell_count = num_cells(board);
-    board.grid = malloc(cell_count);
-    board.next_grid = malloc(cell_count);
+	board.grid = NULL;
+	board.next_grid = NULL;
+	int cell_count = num_cells(board);
+	board.grid = malloc(cell_count);
+	board.next_grid = malloc(cell_count);
 
-    memset(board.grid, 0, cell_count);
-    memset(board.next_grid, 0, cell_count);
+	memset(board.grid, 0, cell_count);
+	memset(board.next_grid, 0, cell_count);
 
-    fseek(board_file, 0, SEEK_SET);
-    int counter = 0;
-    while (fgets(buffer, MAX_SIZE, board_file) != NULL)
-    {
-        for (int i = 0; i < width; i++)
-        {
-            if (buffer[i] == '1')
-            {
-                // TODO replace this with next line
-                board.next_grid[counter] |= ALIVE_CELL;
-                // set_cell_alive_buffer(board, count);
-            }
-            else if (buffer[i] == '0')
-            {
-                board.next_grid[counter] &= ~ALIVE_CELL;
-            }
-            counter++;
-        }
-    }
+	fseek(board_file, 0, SEEK_SET);
+	int counter = 0;
+	while (fgets(buffer, MAX_SIZE, board_file) != NULL)
+	{
+		for (int i = 0; i < width; i++)
+		{
+			if (buffer[i] == '1')
+			{
+				// TODO replace this with next line
+				board.next_grid[counter] |= ALIVE_CELL;
+				// set_cell_alive_buffer(board, count);
+			}
+			else if (buffer[i] == '0')
+			{
+				board.next_grid[counter] &= ~ALIVE_CELL;
+			}
+			counter++;
+		}
+	}
 
-    memcpy(board.grid, board.next_grid, cell_count);
-    return board;
+	memcpy(board.grid, board.next_grid, cell_count);
+	return board;
 }
 
 void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode)
@@ -112,7 +112,7 @@ void update_neighbour_buffer(Board board, int index, int relative_index, int upd
 	if (index < 0) return;
 
 	int delta = update_mode == MODE_INCREMENT ? 1 : -1;
-    int offset_setmap[8] = {
+	int offset_setmap[8] = {
 		-board.width - 1,
 		-board.width,
 		-board.width + 1,
@@ -121,7 +121,7 @@ void update_neighbour_buffer(Board board, int index, int relative_index, int upd
 		board.width - 1,
 		board.width,
 		board.width + 1
-    };
+	};
 
 	int true_index = offset_setmap[relative_index] + index;
 	board.next_grid[true_index] += delta;
@@ -208,21 +208,21 @@ void decrement_neighbour_buffer(Board board, int index, int relative_index)
 
 void set_cell_dead_buffer(Board board, int index)
 {
-    bool cell_alive = is_cell_alive(board, index);
-    if (!cell_alive)
-    {
-        return;
-    }
+	bool cell_alive = is_cell_alive(board, index);
+	if (!cell_alive)
+	{
+		return;
+	}
 	set_cell_state_buffer(board, index, STATE_DEAD);
 }
 
 void set_cell_alive_buffer(Board board, int index)
 {
-    bool cell_alive = is_cell_alive(board, index);
-    if (cell_alive)
-    {
-        return;
-    }
+	bool cell_alive = is_cell_alive(board, index);
+	if (cell_alive)
+	{
+		return;
+	}
 	set_cell_state_buffer(board, index, STATE_ALIVE);
 }
 
@@ -238,17 +238,17 @@ void increment_state(Board board)
 		int cell_alive = is_cell_alive(board, i);
 		if (cell_alive &&neighbours < 2)
 		{
-            printf("cell_alive &&neighbours < 2\n");
+			printf("cell_alive &&neighbours < 2\n");
 			set_cell_dead_buffer(board, i);
 		}
 		else if (!cell_alive && neighbours == 3)
 		{
-            printf("!cell_alive && neighbours == 3\n");
+			printf("!cell_alive && neighbours == 3\n");
 			set_cell_alive_buffer(board, i);
 		}
 		else if (cell_alive && neighbours >= 4)
 		{
-            printf("cell_alive && neighbours >= 4\n");
+			printf("cell_alive && neighbours >= 4\n");
 			set_cell_dead_buffer(board, i);
 		}
 	}
