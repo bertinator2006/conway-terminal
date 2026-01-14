@@ -2,7 +2,6 @@
 #define CONWAY_H
 
 #include <stdbool.h>
-#include <stdint.h>
 
 #define X_OUT_BOUNDS -1
 #define Y_OUT_BOUNDS -2
@@ -10,8 +9,8 @@
 #define SUCCESS 0
 
 typedef struct Board {
-	uint8_t *grid;
-	uint8_t *next_grid;
+	char *grid;
+	char *next_grid;
 	int width;
 	int height;
 } Board;

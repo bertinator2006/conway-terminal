@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "terminal.h"
 #include "conway.h"
 
-#define WIDTH 10
-#define HEIGHT 10
-
+#define WIDTH 20
+#define HEIGHT 20
 
 int main(int argc, char *argv[])
 {
@@ -16,12 +16,17 @@ int main(int argc, char *argv[])
 	}
 
 	printf("Starting game...\n");
+        // Board board = init_empty_board(WIDTH, HEIGHT);
+        // // TODO - create dummy test board
 	Board board = create_board_from_file(argv[1]);
 
-	info_board(board);
-	increment_state(board);
-	print_separator(board);
-	print_board(board);
+        while (true)
+        {
+                print_board(board);
+                increment_state(board);
+                fgets(NULL, 0, stdin);
+        }
 
+        destroy_board(board);
 	return 0;
 }

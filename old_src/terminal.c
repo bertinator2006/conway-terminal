@@ -2,13 +2,13 @@
 #include "conway.h"
 #include "terminal.h"
 
-#define ALIVE_CELL 0b10000000 // Bit map which tells if a cell is alive or not
+#define ALIVE_CELL 0b10000000
 
-static void print_cell(Board board, int x, int y)
+void print_cell(Board board, int x, int y)
 {
 	if (cell_alive(board, x, y))
 	{
-		printf("[]");
+		 printf("[]");
 	}
 	else
 	{
