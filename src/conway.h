@@ -33,4 +33,7 @@ void destroy_board(Board board);
 // Gets a board from a file
 Board create_board_from_file(const char *board_file_name);
 
+// Creates a board from a string
+Board create_board_from_string(int width, int height, char string[]);
+
 #endif

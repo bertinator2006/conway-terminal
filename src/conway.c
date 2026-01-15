@@ -17,7 +17,25 @@
 #define FILE_CHAR_DEAD '0'
 
 static void set_cell_state_buffer(Board board, int index, bool state);
+static char choose_init_cell(char byte);
 static void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode);
+
+Board create_board_from_string(int width, int height, char string[])
+{
+	// I kinda copilotted this one, hope it works lol
+	Board board = init_empty_board(width, height);
+	int cell_count = num_cells(board);
+
+	for (int i = 0; i < cell_count; i++)
+	{
+		board.next_grid[i] = choose_init_cell(string[i]);
+		bool set_state = (board.next_grid[i] >> 7) & STATE_ALIVE;
+		set_cell_state_buffer(board, i, set_state);
+	}
+
+	memcpy(board.grid, board.next_grid, cell_count);
+	return board;
+}
 
 Board create_board_from_file(const char *board_file_name)
 {
