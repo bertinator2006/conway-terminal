@@ -56,9 +56,8 @@ static Board input_from_terminal() {
 	while ((throwaway = getchar()) != '\n' && throwaway != EOF) {}
 
 	printf("Board size set to %dx%d\n", width, height);
-
-
 	char *input = malloc(sizeof(char) * (height * width));
+	
 	int index = 0;
 	printf("Enter board rows (use 0 for dead cells and 1 for alive cells and press enter to go to the next row):\n");
 	for (int row = 0; row < height; row++) 
