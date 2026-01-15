@@ -173,9 +173,12 @@ static void update_neighbour_buffer(Board board, int index, int relative_index, 
 	};
 
 	int true_index = offset_setmap[relative_index] + index;
-	if (board.next_grid[true_index] & ~ALIVE_CELL)
+	int delta = (update_mode == MODE_INCREMENT) ? 1 : -1;
+	if (delta > 0) {
+		board.next_grid[true_index] += delta;
+	} else
 	{
-		board.next_grid[true_index] += (update_mode == MODE_INCREMENT) ? 1 : -1;
+		board.next_grid[true_index] += (board.next_grid[true_index] & ~ALIVE_CELL) ? delta : 0;
 	}
 }
 
