@@ -22,6 +22,7 @@ static void update_neighbour_buffer(Board board, int index, int relative_index, 
 static int num_cells(Board board);
 static int num_neighbours(Board board, int index);
 static int is_cell_alive(Board board, int index);
+Board init_empty_board(int width, int height);
 
 Board create_board_from_string(int width, int height, char string[])
 {
@@ -217,3 +218,15 @@ static int is_cell_alive(Board board, int index)
 {
 	return board.grid[index] & ALIVE_CELL;
 }
+
+Board init_empty_board(int width, int height)
+{
+    Board board;
+    board.width = width;
+    board.height = height;
+    board.grid = calloc(num_cells(board), sizeof(char));
+    board.next_grid = calloc(num_cells(board), sizeof(char));
+
+    return board;
+}
+

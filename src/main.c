@@ -31,13 +31,16 @@ int main(int argc, char *argv[])
 
 	printf("Starting game...\n");
 
-        while (true)
-        {
-			print_board(board);
-			increment_state(board);
-			fgets(NULL, 0, stdin);
-        }
+    while (true)
+    {
+        print_separator(board);
+        print_board(board);
+		increment_state(board);
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF) {};
+    }
 
 	destroy_board(board);
 	return 0;
 }
+
