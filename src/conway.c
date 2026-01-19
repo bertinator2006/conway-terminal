@@ -19,6 +19,9 @@
 static void set_cell_state_buffer(Board board, int index, bool state);
 static char choose_init_cell(char byte);
 static void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode);
+static int num_cells(Board board);
+static int num_neighbours(Board board, int index);
+static int is_cell_alive(Board board, int index);
 
 Board create_board_from_string(int width, int height, char string[])
 {
@@ -63,17 +66,17 @@ Board create_board_from_file(const char *board_file_name)
 	while (fgets(buffer, MAX_SIZE, board_file) != NULL)
 	{
 		i = strcspn(buffer, "\n");
-		
+
 		if (width == 0)
-		{ 
+		{
 			width = i;
-		} 
+		}
 		else if (i != width)
 		{
 			fprintf(stderr, "File has inconsistent width.\n");
 			exit(1);
 		}
-		
+
 		height++;
 	}
 
@@ -128,7 +131,7 @@ void increment_state(Board board)
 			set_cell_state_buffer(board, i, STATE_DEAD);
 		}
 	}
-	
+
 	memcpy(board.grid, board.next_grid, num_cells(board));
 }
 
@@ -162,7 +165,7 @@ static void set_cell_state_buffer(Board board, int index, bool state)
 		bool within_bounds_x = (x >= 0 && x <= board.width);
 		bool within_bounds_y = (y >= 0 && y <= board.width);
 		bool within_bounds = (within_bounds_x  && within_bounds_y);
-		
+
 		if (within_bounds && state == SET_STATE_ALIVE)
 		{
 			update_neighbour_buffer(board, index, i, MODE_DECREMENT);
@@ -178,7 +181,7 @@ static void set_cell_state_buffer(Board board, int index, bool state)
 static void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode)
 {
 	if (index < 0) { return; }
-	
+
 	int offset_setmap[8] = {
 		-board.width - 1,
 		-board.width,
@@ -200,3 +203,17 @@ static void update_neighbour_buffer(Board board, int index, int relative_index, 
 	}
 }
 
+static int num_cells(Board board)
+{
+	return board.width * board.height;
+}
+
+static int num_neighbours(Board board, int index)
+{
+	return board.grid[index] & (~ALIVE_CELL);
+}
+
+static int is_cell_alive(Board board, int index)
+{
+	return board.grid[index] & ALIVE_CELL;
+}

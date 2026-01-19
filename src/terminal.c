@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "conway.h"
 #include "terminal.h"
 
@@ -45,7 +46,7 @@ void print_separator(Board board)
 	printf("\n");
 }
 
-static Board input_from_terminal() {
+Board input_from_terminal() {
 	int width;
 	int height;
 	int throwaway;
