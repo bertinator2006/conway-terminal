@@ -1,4 +1,4 @@
-SRC = src/conway.c src/main.c src/terminal.c
+SRC = src/conway.c src/terminal_main.c src/terminal.c
 BIN = program
 
 all:
@@ -9,4 +9,3 @@ run:
 
 clean:
 	rm $(BIN)
-
