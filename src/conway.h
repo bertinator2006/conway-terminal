@@ -18,7 +18,7 @@ typedef struct Board {
 
 // creates empty board
 // Needs to be destroyed at end of program with destroy_board
-Board init_empty_board(int width, int height);
+Board create_empty_board(int width, int height);
 
 // moves the board_state ahead by one
 void increment_state(Board board);

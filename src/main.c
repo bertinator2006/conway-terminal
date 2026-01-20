@@ -25,20 +25,22 @@ int main(int argc, char *argv[])
 	{
 		printf("Loading board from file...\n");
 		// Board board = init_empty_board(WIDTH, HEIGHT);
-        // // TODO - create dummy test board
+		// TODO - create dummy test board
 		board = create_board_from_file(argv[1]);
+		printf("Finished loading board from file.\n");
 	}
 
 	printf("Starting game...\n");
-
-    while (true)
-    {
-        print_separator(board);
-        print_board(board);
+	
+	while (true)
+	{
+		print_separator(board);
+		print_board(board);
+		printf("HERE\n");
 		increment_state(board);
-        int c;
-        while ((c = getchar()) != '\n' && c != EOF) {};
-    }
+		int c;
+		while ((c = getchar()) != '\n' && c != EOF) {};
+	}
 
 	destroy_board(board);
 	return 0;

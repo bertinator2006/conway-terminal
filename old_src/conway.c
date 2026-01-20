@@ -262,7 +262,7 @@ bool cell_alive(Board board, int x, int y)
 	return board.grid[y * board.width + x] & ALIVE_CELL;
 }
 
-Board init_empty_board(int width, int height)
+Board create_empty_board(int width, int height)
 {
 	Board board;
 	board.width = width;
