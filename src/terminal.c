@@ -9,11 +9,11 @@ void print_cell(Board board, int x, int y)
 {
 	if (cell_alive(board, x, y))
 	{
-		printf("[]");
+		printf("X");
 	}
 	else
 	{
-		printf("--");
+		printf("-");
 	}
 }
 
@@ -24,6 +24,26 @@ void print_board(Board board)
 		for (int j = 0; j < board.width; j++)
 		{
 			print_cell(board, j, i);
+		}
+		printf("\n");
+	}
+}
+
+static char choose_character(bool alive)
+{
+	if (alive) return 'X';
+	return ' ';
+}
+
+void print_neighbours(Board board)
+{
+	for (int i = 0; i < board.height; i++)
+	{
+		for (int j = 0; j < board.width; j++)
+		{
+			int neighbour_count = board.grid[j + i * board.width] & (~ALIVE_CELL);
+			int alive = (board.grid[j + i * board.width] & ALIVE_CELL) != 0;
+			printf(" %c%i", choose_character(alive), neighbour_count);
 		}
 		printf("\n");
 	}

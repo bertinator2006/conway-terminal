@@ -6,8 +6,6 @@
 #include "conway.h"
 
 #define MAX_SIZE 4000
-#define SET_STATE_ALIVE 1
-#define SET_STATE_DEAD 0
 #define MODE_DECREMENT -1
 #define MODE_INCREMENT 1
 #define ALIVE_CELL 0b10000000
@@ -25,6 +23,10 @@ static int is_cell_alive(Board board, int index);
 Board create_empty_board(int width, int height);
 static char calc_neighbour_count(Board board, int index);
 static void init_board_neighbours(Board board);
+
+static void debug(void) {
+	printf("Here\n");
+}
 
 bool cell_alive(Board board, int x, int y)
 {
@@ -61,13 +63,6 @@ Board create_board_from_file(const char *board_file_name)
 
 	char buffer[MAX_SIZE] = {0};
 
-	char *result = fgets(buffer, MAX_SIZE, board_file);
-	if (result == NULL)
-	{
-		fprintf(stderr, "Error reading the file.\n");
-		exit(EXIT_FAILURE);
-	}
-
 	int width = 0;
 	int height = 0;
 
@@ -98,16 +93,22 @@ Board create_board_from_file(const char *board_file_name)
 	{
 		for (int i = 0; i < width; i++)
 		{
-			board.next_grid[counter] = choose_init_cell(buffer[i]);
-			bool set_state = (board.next_grid[counter] >> 7) & STATE_ALIVE;
+			if (buffer[i] == '1')
+			{
+				board.next_grid[counter] |= ALIVE_CELL;
+			}
+			else
+			{
+				board.next_grid[counter] &= (~ALIVE_CELL);
+			}
+			// board.next_grid[counter] = choose_init_cell(buffer[i]);
+			bool set_state = board.next_grid[counter] & ALIVE_CELL;
 			set_cell_state_buffer(board, counter, set_state);
 			counter++;
 		}
 	}
 
-	init_board_neighbours(board);
-
-	memcpy(board.grid, board.next_grid, cell_count);
+	memcpy(board.grid, board.next_grid, cell_count * sizeof(char));
 	return board;
 }
 
@@ -120,6 +121,7 @@ static char choose_init_cell(char byte)
 	return ALIVE_CELL;
 }
 
+// TODO - this is not working at all and empties the board
 static void init_board_neighbours(Board board)
 {
 
@@ -182,6 +184,9 @@ void increment_state(Board board)
 	{
 		int neighbours = num_neighbours(board, i);
 		int cell_alive = is_cell_alive(board, i);
+		// if (cell_alive) {
+		// 	printf("%d\n", neighbours)
+		// }
 		if (cell_alive && neighbours < 2)
 		{
 			// printf("cell_alive && neighbours < 2\n");
@@ -189,6 +194,7 @@ void increment_state(Board board)
 		}
 		else if (!cell_alive && neighbours == 3)
 		{
+			debug();
 			// printf("!cell_alive && neighbours == 3\n");
 			set_cell_state_buffer(board, i, STATE_ALIVE);
 		}
@@ -204,8 +210,10 @@ void increment_state(Board board)
 
 static void set_cell_state_buffer(Board board, int index, bool state)
 {
+	if (state == STATE_DEAD && !is_cell_alive(board, index)) return;
 	if (state == STATE_ALIVE)
 	{
+		
 		board.next_grid[index] |= ALIVE_CELL;
 	}
 	else if (state == STATE_DEAD)
@@ -215,29 +223,26 @@ static void set_cell_state_buffer(Board board, int index, bool state)
 
 	int offset_setmap[8][2] = {
 		{-1, -1}, { 0, -1}, { 1, -1},
-		{-1,  0}, { 1,  0},
+		{-1,  0},           
+		{ 1,  0},
 		{-1,  1}, { 0,  1}, { 1,  1}
 	};
 
-	int x = index % board.width;
-	int y = index / board.width;
-	int offset_x;
-	int offset_y;
+	int tx = index % board.width;
+	int ty = index / board.width;
 	for (int i = 0; i < 8; i++)
 	{
-		offset_x = offset_setmap[i][0];
-		offset_y = offset_setmap[i][1];
-		x += offset_x;
-		y += offset_y;
-		bool within_bounds_x = (x >= 0 && x <= board.width);
-		bool within_bounds_y = (y >= 0 && y <= board.width);
+		int x = tx + offset_setmap[i][0];
+		int y = ty + offset_setmap[i][1];
+		bool within_bounds_x = (x >= 0 && x < board.width);
+		bool within_bounds_y = (y >= 0 && y < board.height);
 		bool within_bounds = (within_bounds_x  && within_bounds_y);
 
-		if (within_bounds && state == SET_STATE_ALIVE)
+		if (within_bounds && state == STATE_ALIVE)
 		{
-			update_neighbour_buffer(board, index, i, MODE_DECREMENT);
+			update_neighbour_buffer(board, index, i, MODE_INCREMENT);
 		}
-		else if (within_bounds && state == SET_STATE_DEAD)
+		else if (within_bounds && state == STATE_DEAD)
 		{
 			update_neighbour_buffer(board, index, i, MODE_DECREMENT);
 		}
@@ -247,7 +252,11 @@ static void set_cell_state_buffer(Board board, int index, bool state)
 
 static void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode)
 {
-	if (index < 0) { return; }
+	if (index < 0)
+	{
+		printf("How did it fail this\n");
+		return;
+	}
 
 	int offset_setmap[8] = {
 		-board.width - 1,
@@ -261,13 +270,22 @@ static void update_neighbour_buffer(Board board, int index, int relative_index, 
 	};
 
 	int true_index = offset_setmap[relative_index] + index;
-	int delta = (update_mode == MODE_INCREMENT) ? 1 : -1;
-	if (delta > 0) {
-		board.next_grid[true_index] += delta;
-	} else
+	if (update_mode > 0)
 	{
-		board.next_grid[true_index] += (board.next_grid[true_index] & ~ALIVE_CELL) ? delta : 0;
+		// char before = board.next_grid[true_index]; 
+		board.next_grid[true_index] += update_mode;
+		// char after = board.next_grid[true_index];
+		// printf("%02x -> %02x\n\n", before, after);
 	}
+	else
+	{
+		board.next_grid[true_index] += (board.next_grid[true_index] & (~ALIVE_CELL)) ? update_mode : 0;
+	}
+	// printf("This is the end of update_neighbour_buffer. %i is: %02x\n", true_index, board.next_grid[true_index]);
+
+	// memcpy(board.grid, board.next_grid, num_cells(board) * sizeof(char));
+	// printf("This is the end of update_neighbour_buffer. %i is: %02x\n", true_index, board.grid[true_index]);
+
 }
 
 static int num_cells(Board board)
@@ -299,3 +317,8 @@ Board create_empty_board(int width, int height)
     return board;
 }
 
+void destroy_board(Board board)
+{
+	free(board.grid);
+	free(board.next_grid);
+}

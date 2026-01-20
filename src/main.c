@@ -30,16 +30,19 @@ int main(int argc, char *argv[])
 		printf("Finished loading board from file.\n");
 	}
 
+
 	printf("Starting game...\n");
 	
 	while (true)
 	{
+		// print_separator(board);
+		// print_board(board);
 		print_separator(board);
-		print_board(board);
-		printf("HERE\n");
-		increment_state(board);
+		print_neighbours(board);
+		print_separator(board);
 		int c;
 		while ((c = getchar()) != '\n' && c != EOF) {};
+		increment_state(board);
 	}
 
 	destroy_board(board);

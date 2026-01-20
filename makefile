@@ -7,3 +7,6 @@ all:
 run:
 	./$(BIN)
 
+clean:
+	rm $(BIN)
+
