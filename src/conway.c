@@ -153,7 +153,7 @@ static char calc_neighbour_count(Board board, int index)
 		{-1,  0}, { 1,  0},
 		{-1,  1}, { 0,  1}, { 1,  1}
 	};
-	
+
 	char count = 0;
 	int tx = index % board.width;
 	int ty = index / board.width;
@@ -171,7 +171,7 @@ static char calc_neighbour_count(Board board, int index)
 			if (board.grid[index + offset_setmap[i]] & ALIVE_CELL)
 			{
 				count++;
-			}			
+			}
 		}
 	}
 
@@ -212,7 +212,7 @@ static void set_cell_state_buffer(Board board, int index, bool state)
 	if (state == STATE_DEAD && !is_cell_alive(board, index)) return;
 	if (state == STATE_ALIVE)
 	{
-		
+
 		board.next_grid[index] |= ALIVE_CELL;
 	}
 	else if (state == STATE_DEAD)
@@ -222,7 +222,7 @@ static void set_cell_state_buffer(Board board, int index, bool state)
 
 	int offset_setmap[8][2] = {
 		{-1, -1}, { 0, -1}, { 1, -1},
-		{-1,  0},           
+		{-1,  0},
 		{ 1,  0},
 		{-1,  1}, { 0,  1}, { 1,  1}
 	};
@@ -271,7 +271,7 @@ static void update_neighbour_buffer(Board board, int index, int relative_index, 
 	int true_index = offset_setmap[relative_index] + index;
 	if (update_mode > 0)
 	{
-		// char before = board.next_grid[true_index]; 
+		// char before = board.next_grid[true_index];
 		board.next_grid[true_index] += update_mode;
 		// char after = board.next_grid[true_index];
 		// printf("%02x -> %02x\n\n", before, after);
