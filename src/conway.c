@@ -23,6 +23,7 @@ static int num_cells(Board board);
 static int num_neighbours(Board board, int index);
 static int is_cell_alive(Board board, int index);
 Board init_empty_board(int width, int height);
+static char calc_neighbour_count(Board board, int index);
 
 Board create_board_from_string(int width, int height, char string[])
 {
@@ -108,6 +109,61 @@ static char choose_init_cell(char byte)
 		return DEAD_CELL;
 	}
 	return ALIVE_CELL;
+}
+
+static void init_board_neighbours(Board board)
+{
+
+	int cell_count = num_cells(board);
+	for (int i = 0; i < cell_count; i++)
+	{
+		char alive = board.grid[i] & ALIVE_CELL;
+		board.grid[i] = alive | calc_neighbour_count(board, i);
+	}
+
+}
+
+static char calc_neighbour_count(Board board, int index)
+{
+	int offset_setmap[8] = {
+		-board.width - 1,
+		-board.width,
+		-board.width + 1,
+		-1,
+		1,
+		board.width - 1,
+		board.width,
+		board.width + 1
+	};
+
+	int boundary_check[8][2] = {
+		{-1, -1}, { 0, -1}, { 1, -1},
+		{-1,  0}, { 1,  0},
+		{-1,  1}, { 0,  1}, { 1,  1}
+	};
+	
+	char count = 0;
+	int tx = index % board.width;
+	int ty = index / board.width;
+
+	for (int i = 0; i < 8; i++)
+	{
+		int x = tx + boundary_check[i][0];
+		int y = ty + boundary_check[i][1];
+
+		bool within_bounds_x = (x >= 0 && x <= board.width);
+		bool within_bounds_y = (y >= 0 && y <= board.width);
+
+		if (within_bounds_x  && within_bounds_y)
+		{
+			if (board.grid[index + offset_setmap[i]] & ALIVE_CELL)
+			{
+				count++;
+			}			
+		}
+	}
+
+	return count;
 }
 
 void increment_state(Board board)
