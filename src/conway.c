@@ -117,10 +117,11 @@ static void init_board_neighbours(Board board)
 	int cell_count = num_cells(board);
 	for (int i = 0; i < cell_count; i++)
 	{
-		char alive = board.grid[i] & ALIVE_CELL;
-		board.grid[i] = alive | calc_neighbour_count(board, i);
+		char alive = board.next_grid[i] & ALIVE_CELL;
+		board.next_grid[i] = alive | calc_neighbour_count(board, i);
 	}
 
+	memcpy(board.grid, board.next_grid, 1);
 }
 
 static char calc_neighbour_count(Board board, int index)
