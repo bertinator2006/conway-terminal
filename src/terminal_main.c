@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
 
 	printf("Starting game...\n");
-	
+
 	while (true)
 	{
 		// print_separator(board);
@@ -48,4 +48,3 @@ int main(int argc, char *argv[])
 	destroy_board(board);
 	return 0;
 }
-
