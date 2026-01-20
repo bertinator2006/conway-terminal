@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 		// print_separator(board);
 		// print_board(board);
 		print_separator(board);
-		print_neighbours(board);
+		print_board(board);
 		print_separator(board);
 		int c;
 		while ((c = getchar()) != '\n' && c != EOF) {};

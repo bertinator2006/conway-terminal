@@ -9,11 +9,11 @@ void print_cell(Board board, int x, int y)
 {
 	if (cell_alive(board, x, y))
 	{
-		printf("X");
+		printf("[]");
 	}
 	else
 	{
-		printf("-");
+		printf("--");
 	}
 }
 

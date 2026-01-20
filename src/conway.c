@@ -194,7 +194,6 @@ void increment_state(Board board)
 		}
 		else if (!cell_alive && neighbours == 3)
 		{
-			debug();
 			// printf("!cell_alive && neighbours == 3\n");
 			set_cell_state_buffer(board, i, STATE_ALIVE);
 		}
