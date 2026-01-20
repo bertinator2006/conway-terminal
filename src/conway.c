@@ -38,6 +38,8 @@ Board create_board_from_string(int width, int height, char string[])
 		set_cell_state_buffer(board, i, set_state);
 	}
 
+	init_board_neighbours(board);
+
 	memcpy(board.grid, board.next_grid, cell_count);
 	return board;
 }
@@ -98,6 +100,8 @@ Board create_board_from_file(const char *board_file_name)
 		}
 	}
 
+	init_board_neighbours(board);
+
 	memcpy(board.grid, board.next_grid, cell_count);
 	return board;
 }
@@ -117,7 +121,7 @@ static void init_board_neighbours(Board board)
 	int cell_count = num_cells(board);
 	for (int i = 0; i < cell_count; i++)
 	{
-		char alive = board.next_grid[i] & ALIVE_CELL;
+		char alive = board.grid[i] & ALIVE_CELL;
 		board.next_grid[i] = alive | calc_neighbour_count(board, i);
 	}
 
