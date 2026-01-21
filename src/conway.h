@@ -30,10 +30,13 @@ bool cell_alive(Board board, int x, int y);
 // Needs to be called for every init_board called
 void destroy_board(Board board);
 
+// Public function to allow programs to spawn individual cells
+void set_cell_as_alive(Board board, int x, int y);
+
+// Public function to allow programs to kill individual cells
+void set_cell_as_dead(Board board, int x, int y);
+
 // Gets a board from a file
 Board create_board_from_file(const char *board_file_name);
-
-// Creates a board from a string
-Board create_board_from_string(int width, int height, char string[]);
 
 #endif

@@ -19,7 +19,6 @@ int main(int argc, char *argv[])
 	if (argc < 2)
 	{
 		printf("Creating board from player inputs...\n");
-		board = input_from_terminal();
 	}
 	else if (argc == 2)
 	{

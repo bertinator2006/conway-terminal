@@ -20,7 +20,6 @@ static void update_neighbour_buffer(Board board, int index, int relative_index, 
 static int num_cells(Board board);
 static int num_neighbours(Board board, int index);
 static int is_cell_alive(Board board, int index);
-Board create_empty_board(int width, int height);
 static char calc_neighbour_count(Board board, int index);
 static void init_board_neighbours(Board board);
 
@@ -31,25 +30,6 @@ static void debug(void) {
 bool cell_alive(Board board, int x, int y)
 {
 	return board.grid[y * board.width + x] & ALIVE_CELL;
-}
-
-Board create_board_from_string(int width, int height, char string[])
-{
-	// I kinda copilotted this one, hope it works lol
-	Board board = create_empty_board(width, height);
-	int cell_count = num_cells(board);
-
-	for (int i = 0; i < cell_count; i++)
-	{
-		board.next_grid[i] = choose_init_cell(string[i]);
-		bool set_state = (board.next_grid[i] >> 7) & STATE_ALIVE;
-		set_cell_state_buffer(board, i, set_state);
-	}
-
-	init_board_neighbours(board);
-
-	memcpy(board.grid, board.next_grid, cell_count);
-	return board;
 }
 
 Board create_board_from_file(const char *board_file_name)
@@ -121,6 +101,7 @@ static char choose_init_cell(char byte)
 	return ALIVE_CELL;
 }
 
+<<<<<<< HEAD
 // TODO - this is not working at all and empties the board
 static void init_board_neighbours(Board board)
 {
@@ -178,28 +159,26 @@ static char calc_neighbour_count(Board board, int index)
 	return count;
 }
 
+=======
+>>>>>>> 52f9fd9 (Updated usage of terminal functions)
 void increment_state(Board board)
 {
+	// all work done on buffer (board.next_grid) {using current neighbour count}
+	// state then memcpy'd from buffer  into current
 	for (int i = 0; i < num_cells(board); i++)
 	{
 		int neighbours = num_neighbours(board, i);
 		int cell_alive = is_cell_alive(board, i);
-		// if (cell_alive) {
-		// 	printf("%d\n", neighbours)
-		// }
 		if (cell_alive && neighbours < 2)
 		{
-			// printf("cell_alive && neighbours < 2\n");
 			set_cell_state_buffer(board, i, STATE_DEAD);
 		}
 		else if (!cell_alive && neighbours == 3)
 		{
-			// printf("!cell_alive && neighbours == 3\n");
 			set_cell_state_buffer(board, i, STATE_ALIVE);
 		}
 		else if (cell_alive && neighbours >= 4)
 		{
-			// printf("cell_alive && neighbours >= 4\n");
 			set_cell_state_buffer(board, i, STATE_DEAD);
 		}
 	}
@@ -210,9 +189,14 @@ void increment_state(Board board)
 static void set_cell_state_buffer(Board board, int index, bool state)
 {
 	if (state == STATE_DEAD && !is_cell_alive(board, index)) return;
+	if (state == STATE_ALIVE && is_cell_alive(board, index)) return;
+
 	if (state == STATE_ALIVE)
 	{
+<<<<<<< HEAD
 
+=======
+>>>>>>> 52f9fd9 (Updated usage of terminal functions)
 		board.next_grid[index] |= ALIVE_CELL;
 	}
 	else if (state == STATE_DEAD)
@@ -222,8 +206,12 @@ static void set_cell_state_buffer(Board board, int index, bool state)
 
 	int offset_setmap[8][2] = {
 		{-1, -1}, { 0, -1}, { 1, -1},
+<<<<<<< HEAD
 		{-1,  0},
 		{ 1,  0},
+=======
+		{-1,  0}, { 1,  0},
+>>>>>>> 52f9fd9 (Updated usage of terminal functions)
 		{-1,  1}, { 0,  1}, { 1,  1}
 	};
 
@@ -235,7 +223,7 @@ static void set_cell_state_buffer(Board board, int index, bool state)
 		int y = ty + offset_setmap[i][1];
 		bool within_bounds_x = (x >= 0 && x < board.width);
 		bool within_bounds_y = (y >= 0 && y < board.height);
-		bool within_bounds = (within_bounds_x  && within_bounds_y);
+		bool within_bounds = (within_bounds_x && within_bounds_y);
 
 		if (within_bounds && state == STATE_ALIVE)
 		{
@@ -251,11 +239,7 @@ static void set_cell_state_buffer(Board board, int index, bool state)
 
 static void update_neighbour_buffer(Board board, int index, int relative_index, int update_mode)
 {
-	if (index < 0)
-	{
-		printf("How did it fail this\n");
-		return;
-	}
+	if (index < 0) return;
 
 	int offset_setmap[8] = {
 		-board.width - 1,
@@ -271,20 +255,12 @@ static void update_neighbour_buffer(Board board, int index, int relative_index, 
 	int true_index = offset_setmap[relative_index] + index;
 	if (update_mode > 0)
 	{
-		// char before = board.next_grid[true_index];
 		board.next_grid[true_index] += update_mode;
-		// char after = board.next_grid[true_index];
-		// printf("%02x -> %02x\n\n", before, after);
 	}
 	else
 	{
 		board.next_grid[true_index] += (board.next_grid[true_index] & (~ALIVE_CELL)) ? update_mode : 0;
 	}
-	// printf("This is the end of update_neighbour_buffer. %i is: %02x\n", true_index, board.next_grid[true_index]);
-
-	// memcpy(board.grid, board.next_grid, num_cells(board) * sizeof(char));
-	// printf("This is the end of update_neighbour_buffer. %i is: %02x\n", true_index, board.grid[true_index]);
-
 }
 
 static int num_cells(Board board)
@@ -304,20 +280,30 @@ static int is_cell_alive(Board board, int index)
 
 Board create_empty_board(int width, int height)
 {
-    Board board;
-    board.width = width;
-    board.height = height;
-    board.grid = malloc(num_cells(board) * sizeof(char));
-    board.next_grid = malloc(num_cells(board) * sizeof(char));
+	Board board;
+	board.width = width;
+	board.height = height;
+	board.grid = malloc(num_cells(board) * sizeof(char));
+	board.next_grid = malloc(num_cells(board) * sizeof(char));
 
-    memset(board.grid, 0, num_cells(board) * sizeof(char));
-    memcpy(board.next_grid, board.grid, num_cells(board) * sizeof(char));
+	memset(board.grid, 0, num_cells(board) * sizeof(char));
+	memcpy(board.next_grid, board.grid, num_cells(board) * sizeof(char));
 
-    return board;
+	return board;
 }
 
 void destroy_board(Board board)
 {
 	free(board.grid);
 	free(board.next_grid);
+}
+
+void set_cell_as_alive(Board board, int x, int y)
+{
+	set_cell_state_buffer(board, y * board.width + x, STATE_ALIVE);
+}
+
+void set_cell_as_dead(Board board, int x, int y)
+{
+	set_cell_state_buffer(board, y * board.width + x, STATE_DEAD);
 }
