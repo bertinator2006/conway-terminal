@@ -33,13 +33,14 @@ int main(int argc, char *argv[])
 
 	while (true)
 	{
-		// print_separator(board);
-		// print_board(board);
 		print_separator(board);
 		print_board(board);
 		print_separator(board);
+
+		// Wait for user to hit enter
 		int c;
 		while ((c = getchar()) != '\n' && c != EOF) {};
+
 		increment_state(board);
 	}
 
