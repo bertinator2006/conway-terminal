@@ -230,9 +230,11 @@ void destroy_board(Board board)
 void set_cell_as_alive(Board board, int x, int y)
 {
 	set_cell_state_buffer(board, y * board.width + x, STATE_ALIVE);
+	memcpy(board.grid, board.next_grid, num_cells(board) * sizeof(char));
 }
 
 void set_cell_as_dead(Board board, int x, int y)
 {
 	set_cell_state_buffer(board, y * board.width + x, STATE_DEAD);
+	memcpy(board.grid, board.next_grid, num_cells(board) * sizeof(char));
 }

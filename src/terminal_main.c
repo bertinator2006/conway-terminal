@@ -1,11 +1,26 @@
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include "terminal.h"
 #include "conway.h"
 
-#define WIDTH 20
-#define HEIGHT 20
+#define WIDTH 10
+#define HEIGHT 10
+
+Board create_test_board();
+
+Board create_test_board()
+{
+	Board board = create_empty_board(WIDTH, HEIGHT);
+	set_cell_as_alive(board, 5, 5);
+	set_cell_as_alive(board, 6, 6);
+	set_cell_as_alive(board, 4, 7);
+	set_cell_as_alive(board, 5, 7);
+	set_cell_as_alive(board, 6, 7);
+	return board;
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -24,7 +39,14 @@ int main(int argc, char *argv[])
 	else if (argc == 2)
 	{
 		printf("Loading board from file...\n");
-		board = create_board_from_file(argv[1]);
+		if (strcmp(argv[1], "-") == 0)
+		{
+			board = create_test_board();
+		}
+		else
+		{
+			board = create_board_from_file(argv[1]);
+		}
 		printf("Finished loading board from file.\n");
 	}
 
