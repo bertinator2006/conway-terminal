@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 	if (argc < 2)
 	{
 		board = input_from_terminal();
+		printf("Finished creating board from terminal.\n");
 	}
 	else if (argc == 2)
 	{
