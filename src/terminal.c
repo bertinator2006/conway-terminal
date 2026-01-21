@@ -66,36 +66,37 @@ void print_separator(Board board)
 	printf("\n");
 }
 
-Board input_from_terminal() {
+Board input_from_terminal()
+{
+	printf("Please enter the width and size of board.\n[width] [height]: ");
+
 	int width;
 	int height;
-	int throwaway;
-
-	printf("\n");
-	printf("Enter board width: ");
-	scanf("%d", &width);
-	while ((throwaway = getchar()) != '\n' && throwaway != EOF) {}
-
-	printf("Enter board height: ");
-	scanf("%d", &height);
-	while ((throwaway = getchar()) != '\n' && throwaway != EOF) {}
-
-	printf("Board size set to %dx%d\n", width, height);
-	char *input = malloc(sizeof(char) * (height * width));
-
-	int index = 0;
-	printf("Enter board rows (use 0 for dead cells and 1 for alive cells and press enter to go to the next row):\n");
-	for (int row = 0; row < height; row++)
+	scanf(" %d %d",&width, &height);
+	if (width <= 0)
 	{
-		printf("row %d: ", row);
-		for (int col = 0; col < width; col++)
-		{
-			char cell;
-			scanf(" %c", &cell);
-			input[index++] = cell;
-		}
-		while ((throwaway = getchar()) != '\n' && throwaway != EOF) {}
+		fprintf(stderr, "Invalid width.\n");
+		exit(EXIT_FAILURE);
+	}
+	if (height <= 0)
+	{
+		fprintf(stderr, "Invalid height.\n");
+		exit(EXIT_FAILURE);
 	}
 
-	return create_board_from_string(width, height, input);
+	Board board = create_empty_board(width, height);
+
+	printf("Please enter coordinates of alive cells.\n");
+	printf("Enter -1 -1 when done.\n");
+	printf("[x] [y]: ");
+	int x;
+	int y;
+	scanf(" %d %d", &x, &y);
+	while (x != -1 && y != -1)
+	{
+		set_cell_as_alive(board, x, y);
+		scanf(" %d %d", &x, &y);
+	}
+
+	return board;
 }
