@@ -20,8 +20,6 @@ static void update_neighbour_buffer(Board board, int index, int relative_index, 
 static int num_cells(Board board);
 static int num_neighbours(Board board, int index);
 static int is_cell_alive(Board board, int index);
-static char calc_neighbour_count(Board board, int index);
-static void init_board_neighbours(Board board);
 
 static void debug(void) {
 	printf("Here\n");
