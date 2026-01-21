@@ -101,7 +101,6 @@ static char choose_init_cell(char byte)
 	return ALIVE_CELL;
 }
 
-<<<<<<< HEAD
 // TODO - this is not working at all and empties the board
 static void init_board_neighbours(Board board)
 {
@@ -159,8 +158,6 @@ static char calc_neighbour_count(Board board, int index)
 	return count;
 }
 
-=======
->>>>>>> 52f9fd9 (Updated usage of terminal functions)
 void increment_state(Board board)
 {
 	// all work done on buffer (board.next_grid) {using current neighbour count}
@@ -193,10 +190,6 @@ static void set_cell_state_buffer(Board board, int index, bool state)
 
 	if (state == STATE_ALIVE)
 	{
-<<<<<<< HEAD
-
-=======
->>>>>>> 52f9fd9 (Updated usage of terminal functions)
 		board.next_grid[index] |= ALIVE_CELL;
 	}
 	else if (state == STATE_DEAD)
@@ -206,12 +199,7 @@ static void set_cell_state_buffer(Board board, int index, bool state)
 
 	int offset_setmap[8][2] = {
 		{-1, -1}, { 0, -1}, { 1, -1},
-<<<<<<< HEAD
-		{-1,  0},
-		{ 1,  0},
-=======
 		{-1,  0}, { 1,  0},
->>>>>>> 52f9fd9 (Updated usage of terminal functions)
 		{-1,  1}, { 0,  1}, { 1,  1}
 	};
 

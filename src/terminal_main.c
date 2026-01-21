@@ -18,13 +18,11 @@ int main(int argc, char *argv[])
 
 	if (argc < 2)
 	{
-		printf("Creating board from player inputs...\n");
+		board = input_from_terminal();
 	}
 	else if (argc == 2)
 	{
 		printf("Loading board from file...\n");
-		// Board board = init_empty_board(WIDTH, HEIGHT);
-		// TODO - create dummy test board
 		board = create_board_from_file(argv[1]);
 		printf("Finished loading board from file.\n");
 	}
