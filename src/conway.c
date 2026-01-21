@@ -101,63 +101,6 @@ static char choose_init_cell(char byte)
 	return ALIVE_CELL;
 }
 
-// TODO - this is not working at all and empties the board
-static void init_board_neighbours(Board board)
-{
-
-	int cell_count = num_cells(board);
-	for (int i = 0; i < cell_count; i++)
-	{
-		char alive = board.grid[i] & ALIVE_CELL;
-		board.next_grid[i] = alive | calc_neighbour_count(board, i);
-	}
-
-	memcpy(board.grid, board.next_grid, 1);
-}
-
-static char calc_neighbour_count(Board board, int index)
-{
-	int offset_setmap[8] = {
-		-board.width - 1,
-		-board.width,
-		-board.width + 1,
-		-1,
-		1,
-		board.width - 1,
-		board.width,
-		board.width + 1
-	};
-
-	int boundary_check[8][2] = {
-		{-1, -1}, { 0, -1}, { 1, -1},
-		{-1,  0}, { 1,  0},
-		{-1,  1}, { 0,  1}, { 1,  1}
-	};
-
-	char count = 0;
-	int tx = index % board.width;
-	int ty = index / board.width;
-
-	for (int i = 0; i < 8; i++)
-	{
-		int x = tx + boundary_check[i][0];
-		int y = ty + boundary_check[i][1];
-
-		bool within_bounds_x = (x >= 0 && x <= board.width);
-		bool within_bounds_y = (y >= 0 && y <= board.width);
-
-		if (within_bounds_x  && within_bounds_y)
-		{
-			if (board.grid[index + offset_setmap[i]] & ALIVE_CELL)
-			{
-				count++;
-			}
-		}
-	}
-
-	return count;
-}
-
 void increment_state(Board board)
 {
 	// all work done on buffer (board.next_grid) {using current neighbour count}
